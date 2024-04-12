@@ -1,0 +1,49 @@
+::-webkit-scrollbar {
+    width: 5px;
+    border-radius: 2cm;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888; 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+  }
+  
+  .text-container {
+    text-align: center;
+  }
+  
+  .animated-text {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .animated-text::before {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    width: 0;
+    color: #32CD32; /* Green color */
+    animation: revealText 2s forwards;
+  }
+  
+  @keyframes revealText {
+    0% {
+      width: 0;
+    }
+    100% {
+      width: 100%;
+    }
+  }
+  
