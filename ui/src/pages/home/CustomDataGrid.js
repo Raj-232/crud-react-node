@@ -25,23 +25,23 @@ export default function CustomTable({ data = [], handleDeleteEmployee, handleUpd
 
     const columns = [
         // { field: "id", headerName: "ID", width: 90 },
-        { field: "name", headerName: "Name", },
-        { field: "email", headerName: "Email", flex: 1 },
-        { field: "department", headerName: "Department", },
+        { field: "name", headerName: "Name",width: 150, },
+        { field: "email", headerName: "Email", width: 150, },
+        { field: "department", headerName: "Department",width: 150, },
         {
             field: "salary", headerName: "Salary Per Year",
+            width: 150,
             renderCell: (params) => (
                 <Stack direction="row"  alignItems="center" height="100%">
                     <Typography>$ {params.row.salary}</Typography>
                 </Stack>
             ),
         },
-        { field: "project_name", headerName: "Project Name", },
+        { field: "project_name", headerName: "Project Name",width: 150, },
         {
             field: "actions",
             headerName: "Actions",
-            flex: 1,
-
+            width: 200,
             renderCell: (params) => (
                 <Stack direction="row" spacing={4} alignItems="center" height="100%">
                     <Button
@@ -66,7 +66,7 @@ export default function CustomTable({ data = [], handleDeleteEmployee, handleUpd
     ];
 
     return (
-        <Box sx={{ height: 400, width: '900px', boxShadow: 24 }}>
+        <Box sx={{ height: 400, width: '100%', boxShadow: 24 }}>
             <DataGrid
                 rows={data}
                 columns={columns}
