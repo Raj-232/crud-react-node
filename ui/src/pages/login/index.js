@@ -26,6 +26,7 @@ export const Login = () => {
         if (data) {
 
             localStorage.setItem('token', data.token)
+             localStorage.setItem('userId', data?.data?.userId)
             setOpenAlert({
                 ...openAlert,
                 open: true,
@@ -33,7 +34,7 @@ export const Login = () => {
                 msgType: 'success'
             });
             setTimeout(() => {
-                window.location.href = `/${data?.data?.userId}`
+                window.location.href = `/`
             }, [2000])
 
         } else {

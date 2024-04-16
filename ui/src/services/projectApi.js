@@ -29,6 +29,15 @@ export const getProjectApi = async (id) => {
     }
 };
 
+export const deleteProjectApi = async (id) => {
+    try {
+        const response = await api.delete(`/projects/${id}`);
+        return { data: response.data, error: null };
+    } catch (error) {
+        return { data: null, error: error.response.data || error};
+    }
+};
+
 export const createProjectApi = async (data) => {
     try {
         const response = await api.post('/projects', data);

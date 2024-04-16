@@ -28,6 +28,14 @@ export const getTaskApi = async (id) => {
         return { data: null, error: error.response.data || error};
     }
 };
+export const deleteTaskApi = async (id) => {
+    try {
+        const response = await api.delete(`/task/${id}`);
+        return { data: response.data, error: null };
+    } catch (error) {
+        return { data: null, error: error.response.data || error};
+    }
+};
 export const chnageTaskStatus = async (id,data) => {
     try {
         const response = await api.put(`/task/status/${id}`,data);

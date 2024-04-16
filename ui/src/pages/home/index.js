@@ -9,9 +9,9 @@ import { useParams } from 'react-router-dom';
 import CustomSnackbar from '../../componants/CustomSnackbar';
 import { CircularProgress } from '@mui/material';
 import UpdateDialog from './UpdateDialog';
-import { createProjectApi, getAllProjectApi } from '../../services/projectApi';
+import { createProjectApi, deleteProjectApi, getAllProjectApi } from '../../services/projectApi';
 import ProjectTable from './ProjectsTable';
-import { chnageTaskStatus, createTaskApi, getAllTaskApi } from '../../services/taskApi';
+import { chnageTaskStatus, createTaskApi, deleteTaskApi, getAllTaskApi } from '../../services/taskApi';
 import TaskTable from './TaskTable';
 import { TaskDialog } from './TaskDialog';
 import { ProjectDialog } from './ProjectDialog';
@@ -23,9 +23,9 @@ const validationSchema = Yup.object({
   department: Yup.string().required('Department is required'),
 });
 export default function Home() {
-  const { userId } = useParams();
+  const userId  = localStorage.getItem('userId');
   const [apiData, setApiData] = useState([]);
-  const Naviagte=useNavigate()
+  const Naviagte=useNavigate();
   const [apiProjectData, setApiProjectData] = useState([]);
   const [apiTaskData, setApiTaskData] = useState([]);
   const [anchorEl, setAnchorEl] = React.useState({});
@@ -47,6 +47,14 @@ export default function Home() {
     projectName: null,
     employeeName: null
   });
+  const [updateTaskDatas, setUpdateTaskDatas] = useState({
+    taskname: '',
+    description: '',
+    deadline: null,
+    status: 'todo',
+    projectName: null,
+    employeeName: null
+  })
   const [openAlert, setOpenAlert] = useState({
     open: false,
     msg: "",
@@ -159,8 +167,28 @@ export default function Home() {
       
     })
   }
-  const handleDeleteProject = (id) => {
+  const handleDeleteProject = async(id) => {
+    const { data, error } = await deleteProjectApi(id)
+    if (data) {
+      setOpenAlert({
+        ...openAlert,
+        open: true,
+        msg: data.message,
+        msgType: 'success'
+      });
+   
 
+      getProjectData()
+    }
+    else {
+     
+      setOpenAlert({
+        ...openAlert,
+        open: true,
+        msg: error.data.message,
+        msgType: 'error'
+      });
+    }
   }
   const handleUpdateProject = () => {
 
@@ -193,8 +221,26 @@ export default function Home() {
       });
     }
   }
-  const handleDeleteTask = (id) => {
-
+  const handleDeleteTask = async(id) => {
+    const { data, error } = await deleteTaskApi(id)
+    if (data) {
+      setOpenAlert({
+        ...openAlert,
+        open: true,
+        msg: data.message,
+        msgType: 'success'
+      });
+    
+      getTaskData()
+    }
+    else {
+      setOpenAlert({
+        ...openAlert,
+        open: true,
+        msg: error.data.message,
+        msgType: 'error'
+      });
+    }
   }
   const handleUpdateTask = () => {
 
