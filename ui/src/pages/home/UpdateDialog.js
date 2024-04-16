@@ -3,17 +3,17 @@ import { Button, TextField, DialogTitle, Stack, DialogContent, DialogActions, Di
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useGetEmployeeQuery } from '../../services/employeeApi';
 import LoadingButton from '@mui/lab/LoadingButton';
-function UpdateDialog({ setOpenDialogUpdate, openDialogUpdate,validationSchema,handleUpdate,userId ,isUpdating}) {
+function UpdateDialog({ setOpenDialogUpdate, openDialogUpdate,validationSchema,handleUpdate,employeeId ,isUpdating}) {
     const handleClose = () => {
         setOpenDialogUpdate(false);
       };
-    const { data, error, isLoading } = useGetEmployeeQuery(userId,{
+    const { data, error, isLoading } = useGetEmployeeQuery(employeeId,{
         skip: openDialogUpdate?false:true,
         refetchOnMountOrArgChange: true,
     });
     if(isLoading){
         return(
-            <div>loading</div>
+            <div></div>
         )
     }
   return (
@@ -64,15 +64,7 @@ function UpdateDialog({ setOpenDialogUpdate, openDialogUpdate,validationSchema,h
                   error={touched.department && !!errors.department}
                   helperText={touched.department && errors.department}
                 />
-                <Field
-                  name="project_name"
-                  as={TextField}
-                  label="Project Name"
-                  size="small"
-                  fullWidth
-                  error={touched.project_name && !!errors.project_name}
-                  helperText={touched.project_name && errors.projectName}
-                />
+
               </Stack>
               <DialogActions>
                 <Button onClick={handleClose} variant='outlined'>Cancel</Button>

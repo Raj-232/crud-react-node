@@ -54,15 +54,7 @@ function DialogBox({ setOpenDialog, openDialog,validationSchema,initialValues,ha
                   error={touched.department && !!errors.department}
                   helperText={touched.department && errors.department}
                 />
-                <Field
-                  name="project_name"
-                  as={TextField}
-                  label="Project Name"
-                  size="small"
-                  fullWidth
-                  error={touched.project_name && !!errors.project_name}
-                  helperText={touched.project_name && errors.projectName}
-                />
+
               </Stack>
               <DialogActions>
                 <Button onClick={handleClose} variant='outlined'>Cancel</Button>

@@ -20,7 +20,7 @@ function IconDatabasePlus(props) {
 
     );
 }
-export default function CustomTable({ data = [], handleDeleteEmployee, handleUpdateEmployee, isDeleteing, isLoading }) {
+export default function EmployeeTable({ data = [], handleDeleteEmployee, handleUpdateEmployee, isDeleteing, isLoading }) {
 
 
     const columns = [
@@ -37,10 +37,11 @@ export default function CustomTable({ data = [], handleDeleteEmployee, handleUpd
                 </Stack>
             ),
         },
-        { field: "project_name", headerName: "Project Name",width: 150, },
+       
         {
             field: "actions",
             headerName: "Actions",
+            sortable:false,
             width: 200,
             renderCell: (params) => (
                 <Stack direction="row" spacing={4} alignItems="center" height="100%">
@@ -66,7 +67,7 @@ export default function CustomTable({ data = [], handleDeleteEmployee, handleUpd
     ];
 
     return (
-        <Box sx={{ height: 400, width: '100%', boxShadow: 24 }}>
+        <Box sx={{ height: 300, width: '100%', boxShadow: 24 }}>
             <DataGrid
                 rows={data}
                 columns={columns}

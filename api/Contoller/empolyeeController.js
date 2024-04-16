@@ -3,7 +3,7 @@ const Employee = require('../Model/empolyee');
 // Create a new employee
 
 const createEmployee = async (req, res) => {
-    const { name, email, department, salary, project_name } = req.body;
+    const { name, email, department, salary,userId } = req.body;
     try {
         if (!name) {
             return res.status(400).json({
@@ -22,7 +22,7 @@ const createEmployee = async (req, res) => {
         }
 
         const newEmp = await Employee.create({
-            name, email, department, salary, project_name
+            name, email, department, salary,userId
         });
         res.status(201).json({
             status: 201,
@@ -41,8 +41,16 @@ const createEmployee = async (req, res) => {
 
 // Get all employees
 const getAllEmployees = async (req, res) => {
+    const userId = req.params.userId;
+    if (!isNaN(userId)|| !userId) {
+        return res.status(400).json({ message: 'Invalid user ID format' });
+    }
     try {
-        const employees = await Employee.findAll();
+        const employees = await Employee.findAll({
+            where: {
+                userId: userId
+            },
+        });
         res.status(200).json({
             status: 200,
             message: 'Retrieved all employees successfully',
@@ -110,7 +118,7 @@ const deleteEmployee = async (req, res) => {
 // Update an employee by ID
 const updateEmployee = async (req, res) => {
     const id = req.params.id;
-    const { name, email, department, salary, project_name } = req.body;
+    const { name, email, department, salary,userId } = req.body;
     try {
         if (!name || !email) {
             return res.status(400).json({
@@ -129,7 +137,7 @@ const updateEmployee = async (req, res) => {
         employee.email = email;
         employee.department = department;
         employee.salary = salary;
-        employee.project_name = project_name;
+        employee.userId=userId;
         await employee.save();
         res.status(200).json({
             status: 200,
