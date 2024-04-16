@@ -20,7 +20,7 @@ function IconDatabasePlus(props) {
 
     );
 }
-export default function ProjectTable({ data = [], handleDeleteProject, handleUpdateProject }) {
+export default function ProjectTable({ data = [], handleDeleteProject, handleUpdateProject,loading }) {
   console.log(data)
 
     const columns = [
@@ -71,6 +71,7 @@ export default function ProjectTable({ data = [], handleDeleteProject, handleUpd
                     loadingOverlay: LinearProgress,
                     noRowsOverlay: IconDatabasePlus,
                 }}
+                loading={loading}
             />
         </Box>
     );

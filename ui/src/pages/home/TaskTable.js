@@ -21,7 +21,7 @@ function IconDatabasePlus(props) {
 
     );
 }
-export default function TaskTable({ data = [], handleDeleteTask, handleUpdateTask,anchorEl,setAnchorEl,handleTaskStatus }) {
+export default function TaskTable({ data = [], handleDeleteTask, handleUpdateTask,anchorEl,setAnchorEl,handleTaskStatus,loading }) {
    
 
     const handleClick = (event,row) => {
@@ -114,6 +114,7 @@ export default function TaskTable({ data = [], handleDeleteTask, handleUpdateTas
                     loadingOverlay: LinearProgress,
                     noRowsOverlay: IconDatabasePlus,
                 }}
+                loading={loading}
             />
         </Box>
     );

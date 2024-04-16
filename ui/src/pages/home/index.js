@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { useCreateEmployeeMutation, useDeleteEmployeeMutation, useGetAllEmployeeQuery, useUpdateEmployeeMutation } from '../../services/employeeApi'
 import EmployeeTable from './EmployeeTable'
 import { Stack, Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import DialogBox from './DialogBox';
 import * as Yup from 'yup';
 import { useParams } from 'react-router-dom';
 import CustomSnackbar from '../../componants/CustomSnackbar';
+import { CircularProgress } from '@mui/material';
 import UpdateDialog from './UpdateDialog';
 import { createProjectApi, getAllProjectApi } from '../../services/projectApi';
 import ProjectTable from './ProjectsTable';
@@ -23,18 +25,20 @@ const validationSchema = Yup.object({
 export default function Home() {
   const { userId } = useParams();
   const [apiData, setApiData] = useState([]);
+  const Naviagte=useNavigate()
   const [apiProjectData, setApiProjectData] = useState([]);
   const [apiTaskData, setApiTaskData] = useState([]);
   const [anchorEl, setAnchorEl] = React.useState({});
   const [employeeId, setEmployeeId] = useState()
   const [taskDialog, setTaskDialog] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [projectDialog, setProjectDialog] = useState(false)
   const [openDialog, setOpenDialog] = useState(false);
   const [openDialogUpdate, setOpenDialogUpdate] = useState(false);
   const [projectDatas, setProjectDatas] = useState({
     project_name: '',
     description: '',
-});
+  });
   const [taskDatas, setTaskDatas] = useState({
     taskname: '',
     description: '',
@@ -42,7 +46,7 @@ export default function Home() {
     status: 'todo',
     projectName: null,
     employeeName: null
-});
+  });
   const [openAlert, setOpenAlert] = useState({
     open: false,
     msg: "",
@@ -52,7 +56,7 @@ export default function Home() {
   const [updateEmployee, { isLoading: isUpdating }] = useUpdateEmployeeMutation();
   const [createEmployee, { isLoading: isCreateing }] = useCreateEmployeeMutation();
   const [deleteEmployee, { isLoading: isDeleteing }] = useDeleteEmployeeMutation();
-
+ 
 
   const initialValues = {
     name: '',
@@ -67,7 +71,7 @@ export default function Home() {
       email: values.email,
       salary: values.salary,
       department: values.department,
-      userId:userId
+      userId: userId
     };
     await createEmployee(format).unwrap().then((data) => {
       if (!isCreateing) {
@@ -78,6 +82,7 @@ export default function Home() {
           msgType: 'success'
         });
         setOpenDialog(false);
+       
       }
 
     }).catch((err) => {
@@ -88,6 +93,7 @@ export default function Home() {
         msg: err.data.message,
         msgType: 'error'
       });
+    
     })
   };
   const handleUpdate = async (values) => {
@@ -97,7 +103,7 @@ export default function Home() {
       department: values.department,
       salary: values.salary,
       project_name: values.project_name,
-      userId:userId
+      userId: userId
 
     }
 
@@ -111,10 +117,11 @@ export default function Home() {
           msgType: 'success'
         });
         setOpenDialogUpdate(false);
+        
       }
 
     }).catch((err) => {
-
+    
       setOpenAlert({
         ...openAlert,
         open: true,
@@ -139,6 +146,7 @@ export default function Home() {
           msg: data.message,
           msgType: 'success'
         });
+       
       }
     }).catch((err) => {
       console.log(err)
@@ -148,6 +156,7 @@ export default function Home() {
         msg: err.data.message,
         msgType: 'error'
       });
+      
     })
   }
   const handleDeleteProject = (id) => {
@@ -156,24 +165,26 @@ export default function Home() {
   const handleUpdateProject = () => {
 
   }
-  const handleAddProject = async() => {
-    const format={
+  const handleAddProject = async () => {
+    const format = {
       project_name: projectDatas.project_name,
       description: projectDatas.description,
-      userId:userId
+      userId: userId
     }
-    const {data,error}=await createProjectApi(format)
-    if(data){
+    const { data, error } = await createProjectApi(format)
+    if (data) {
       setOpenAlert({
         ...openAlert,
         open: true,
         msg: data.message,
         msgType: 'success'
       });
+   
       setProjectDialog(false)
       getProjectData()
     }
-    else{
+    else {
+     
       setOpenAlert({
         ...openAlert,
         open: true,
@@ -188,28 +199,30 @@ export default function Home() {
   const handleUpdateTask = () => {
 
   }
-  const handleAddTask = async() => {
-    const Formatdata={
-        name:taskDatas.taskname,
-        description:taskDatas.description,
-        status:taskDatas.status,
-        deadline:taskDatas.deadline,
-        projectId:taskDatas.projectName?.projectId,
-        id:taskDatas.employeeName?.id,
-        userId:userId
+  const handleAddTask = async () => {
+    const Formatdata = {
+      name: taskDatas.taskname,
+      description: taskDatas.description,
+      status: taskDatas.status,
+      deadline: taskDatas.deadline,
+      projectId: taskDatas.projectName?.projectId,
+      id: taskDatas.employeeName?.id,
+      userId: userId
     }
-    const {data,error}=await createTaskApi(Formatdata)
-    if(data){
+    const { data, error } = await createTaskApi(Formatdata)
+    if (data) {
       setOpenAlert({
         ...openAlert,
         open: true,
         msg: data.message,
         msgType: 'success'
       });
+    
       setTaskDialog(false)
+      setTaskDatas({})
       getTaskData()
     }
-    else{
+    else {
       setOpenAlert({
         ...openAlert,
         open: true,
@@ -217,52 +230,99 @@ export default function Home() {
         msgType: 'error'
       });
     }
-};
+  };
 
-const handleTaskStatus = async(value,TaskID) => {
-  const format={
-    status:value
-  }
-  
-  const {data,error}=await chnageTaskStatus(TaskID,format)
-    if(data){
+  const handleTaskStatus = async (value, TaskID) => {
+    const format = {
+      status: value
+    }
+
+    const { data, error } = await chnageTaskStatus(TaskID, format)
+    if (data) {
       setOpenAlert({
         ...openAlert,
         open: true,
         msg: data.message,
         msgType: 'success'
       });
+      
       setAnchorEl({ ...anchorEl, [TaskID]: null });
       getTaskData()
     }
-    else{
+    else {
       setOpenAlert({
         ...openAlert,
         open: true,
         msg: error.data.message,
         msgType: 'error'
       });
+     
     }
- 
-};
-const getProjectData = async () => {
-  const { data, error } = await getAllProjectApi(userId);
-  if (data) {
-    setApiProjectData(data.data)
-  } else {
-    console.log(data)
+
+  };
+  const getProjectData = async () => {
+    setLoading(true)
+    const { data, error } = await getAllProjectApi(userId);
+    if (data) {
+      setLoading(true)
+      setApiProjectData(data.data)
+    } else {
+      console.log(error)
+      setOpenAlert({
+        ...openAlert,
+        open: true,
+        msg: error?.message,
+        msgType: 'error'
+      });
+      if(error?.statusCode==403){
+        setTimeout(()=>{
+          Naviagte('/login')
+        },[2000])
+      }
+    }
+    setLoading(false)
   }
-}
-const getTaskData = async () => {
-  const { data, error } = await getAllTaskApi(userId);
-  if (data) {
-    setApiTaskData(data.data)
-  } else {
-    console.log(data)
+  const getTaskData = async () => {
+    setLoading(true)
+    const { data, error } = await getAllTaskApi(userId);
+    if (data) {
+     
+      setApiTaskData(data.data)
+    } else {
+      console.log(error)
+      setOpenAlert({
+        ...openAlert,
+        open: true,
+        msg: error?.message,
+        msgType: 'error'
+      });
+      if(error?.statusCode==403){
+        setTimeout(()=>{
+          Naviagte('/login')
+        },[2000])
+      }
+    }
+    setLoading(false)
   }
-}
+  useEffect(()=>{
+    if(error){
+      console.log(error)
+      setOpenAlert({
+        ...openAlert,
+        open: true,
+        msg: error?.message,
+        msgType: 'error'
+      });
+      if(error?.statusCode==403){
+        setTimeout(()=>{
+          Naviagte('/login')
+        },[2000])
+      }
+    }
+  },[error])
+
   useEffect(() => {
-   
+
     getProjectData()
     getTaskData()
   }, [])
@@ -270,29 +330,34 @@ const getTaskData = async () => {
     setApiData(data?.data)
   }, [data])
   return (
-    <div className="App">
+    <div className="App">{
+      loading &&
+      <CircularProgress sx={{ position:"fixed", top: "50%", left: "50%", zIndex:999 }} />
+    }
       <CustomSnackbar openAlert={openAlert} setOpenAlert={setOpenAlert} />
-      <ProjectDialog projectDialog={projectDialog} setProjectDialog={setProjectDialog} handleAddProject={handleAddProject} projectDatas={projectDatas} setProjectDatas={setProjectDatas}/>
-      <TaskDialog taskDialog={taskDialog} setTaskDialog={setTaskDialog} employeeData={apiData} apiProjectData={apiProjectData} taskDatas={taskDatas} setTaskDatas={setTaskDatas} handleAddTask={handleAddTask}/>
+      <ProjectDialog projectDialog={projectDialog} setProjectDialog={setProjectDialog} handleAddProject={handleAddProject} projectDatas={projectDatas} setProjectDatas={setProjectDatas} />
+      <TaskDialog taskDialog={taskDialog} setTaskDialog={setTaskDialog} employeeData={apiData} apiProjectData={apiProjectData} taskDatas={taskDatas} setTaskDatas={setTaskDatas} handleAddTask={handleAddTask} />
       <Stack justifyContent="center" alignItems="center " padding={4} spacing={2}>
-        <Button variant='contained' onClick={()=> setTaskDialog(true)}>Add Task</Button>
-        <TaskTable 
-        data={apiTaskData} 
-        handleDeleteTask={handleDeleteTask}
-         handleUpdateTask={handleUpdateTask}
-         anchorEl={anchorEl}
-         setAnchorEl={setAnchorEl}
-         handleTaskStatus={handleTaskStatus}
+        <Button variant='contained' onClick={() => setTaskDialog(true)}>Add Task</Button>
+        <TaskTable
+          data={apiTaskData}
+          handleDeleteTask={handleDeleteTask}
+          handleUpdateTask={handleUpdateTask}
+          anchorEl={anchorEl}
+          setAnchorEl={setAnchorEl}
+          handleTaskStatus={handleTaskStatus}
+          loading={loading}
 
-         />
+
+        />
 
         <Stack direction="row" spacing={2} justifyContent="space-between" width="100%">
-          <Button variant='contained' onClick={()=>setProjectDialog(true)}>Add Project</Button>
-          <Button variant='contained' onClick={()=>setOpenDialog(true)}>Add Empolyee</Button>
+          <Button variant='contained' onClick={() => setProjectDialog(true)}>Add Project</Button>
+          <Button variant='contained' onClick={() => setOpenDialog(true)}>Add Empolyee</Button>
 
         </Stack>
         <Stack direction="row" spacing={2}>
-          <ProjectTable data={apiProjectData} handleDeleteProject={handleDeleteProject} handleUpdateProject={handleUpdateProject} />
+          <ProjectTable data={apiProjectData} handleDeleteProject={handleDeleteProject} handleUpdateProject={handleUpdateProject}  loading={loading}/>
           <EmployeeTable data={apiData} handleDeleteEmployee={handleDeleteEmployee} handleUpdateEmployee={handleUpdateEmployee} isDeleteing={isDeleteing} isLoading={isLoading} />
 
         </Stack>

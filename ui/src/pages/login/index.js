@@ -4,7 +4,7 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { Card, Stack } from '@mui/material';
+import { Box, Card, Stack } from '@mui/material';
 import { loginApi } from '../../services/authApi';
 import CustomSnackbar from '../../componants/CustomSnackbar';
 
@@ -14,45 +14,53 @@ const validationSchema = Yup.object().shape({
 });
 
 export const Login = () => {
-    const Navigate=useNavigate();
+    const Navigate = useNavigate();
     const [openAlert, setOpenAlert] = useState({
         open: false,
         msg: "",
         msgType: ""
-      });
+    });
     const handleSubmit = async (values) => {
-        
-       const {data,error}= await loginApi(values)
-       if(data){
 
-        localStorage.setItem('token',data.token)
-        setOpenAlert({
-            ...openAlert,
-            open: true,
-            msg: data.message,
-            msgType: 'success'
-          });
-          setTimeout(()=>{
-            window.location.href=`/${data?.data?.userId}`
-          },[2000])
-   
-       }else{
-        console.log(error)
-        setOpenAlert({
-            ...openAlert,
-            open: true,
-            msg: error.message,
-            msgType: 'error'
-          });
-       }
+        const { data, error } = await loginApi(values)
+        if (data) {
+
+            localStorage.setItem('token', data.token)
+            setOpenAlert({
+                ...openAlert,
+                open: true,
+                msg: data.message,
+                msgType: 'success'
+            });
+            setTimeout(() => {
+                window.location.href = `/${data?.data?.userId}`
+            }, [2000])
+
+        } else {
+            console.log(error)
+            setOpenAlert({
+                ...openAlert,
+                open: true,
+                msg: error.message,
+                msgType: 'error'
+            });
+        }
 
     };
 
     return (
-        <Stack direction="column" height="100vh" justifyContent="center" alignItems="center">
+        <Stack padding={0} direction="column" height="100vh" width="100%" justifyContent="center" alignItems="center"
+        sx={{
+            backgroundImage: "url('https://cdn.pixabay.com/photo/2021/07/06/19/26/drops-6392473_640.jpg')",
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+        }}
+        >
+
             <CustomSnackbar openAlert={openAlert} setOpenAlert={setOpenAlert} />
             <h1>Welcome </h1>
-            <Card sx={{ boxShadow: 24,  width: 700, p: 8 }}>
+           
 
                 <Formik
                     initialValues={{ email: '', password: '' }}
@@ -61,7 +69,7 @@ export const Login = () => {
                 >
                     {({ errors, touched }) => (
                         <Form>
-                            <Stack spacing={2} >
+                            <Stack spacing={2} width={700}>
                                 <div>
                                     <Field
                                         as={TextField}
@@ -90,7 +98,7 @@ export const Login = () => {
                         </Form>
                     )}
                 </Formik>
-            </Card>
+           
         </Stack>
     );
 };

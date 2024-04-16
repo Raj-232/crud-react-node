@@ -5,14 +5,19 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import { Outlet ,useNavigate} from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { Avatar } from '@mui/material';
 const Layout = () => {
-  const Navigate=useNavigate()
-  const logout=()=>{
-     localStorage.clear('token')
-     Navigate('/login')
+  const Navigate = useNavigate()
+  const logout = () => {
+    localStorage.clear('token')
+    Navigate('/login')
   }
+  React.useEffect(() => {
+    if (!localStorage.getItem('token')) {
+      Navigate('/login')
+    }
+  }, [])
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed">
@@ -24,10 +29,10 @@ const Layout = () => {
             aria-label="menu"
             sx={{ mr: 2 }}
           >
-           <Avatar>H</Avatar>
+            <Avatar>H</Avatar>
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Employee Management System
+            Employee Management System
           </Typography>
           <Button color="inherit" onClick={logout}>Log out</Button>
         </Toolbar>
